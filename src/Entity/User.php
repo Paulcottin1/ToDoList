@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -39,16 +41,39 @@ class User implements UserInterface
      */
     private $email;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
+     */
+    private $tasks;
+
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getUsername()
     {
         return $this->username;
     }
 
+    /**
+     * @param $username
+     * @return $this
+     */
     public function setUsername($username)
     {
         $this->username = $username;
@@ -56,16 +81,26 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return null
+     */
     public function getSalt()
     {
         return null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getPassword()
     {
         return $this->password;
     }
 
+    /**
+     * @param $password
+     * @return $this
+     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -73,11 +108,18 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * @param $email
+     * @return $this
+     */
     public function setEmail($email)
     {
         $this->email = $email;
@@ -85,6 +127,9 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRoles()
     {
         return array('ROLE_USER');
@@ -92,5 +137,43 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * @param Task $task
+     * @return $this
+     */
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Task $task
+     * @return $this
+     */
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getUser() === $this) {
+                $task->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
