@@ -47,6 +47,11 @@ class User implements UserInterface
     private $tasks;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $role;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -132,7 +137,7 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return array($this->role);
     }
 
     public function eraseCredentials()
@@ -173,6 +178,25 @@ class User implements UserInterface
                 $task->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param string $role
+     * @return $this
+     */
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
 
         return $this;
     }
