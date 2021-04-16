@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-class TaskController extends Controller
+class TaskController extends AbstractController
 {
     /**
      * @Route("/tasks", name="task_list")
@@ -22,7 +24,7 @@ class TaskController extends Controller
     /**
      * @Route("/tasks/create", name="task_create")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function createAction(Request $request)
     {
@@ -51,7 +53,7 @@ class TaskController extends Controller
      *     message = "Ce n'est pas votre task, vous ne pouvez pas la modifier")
      * @param Task $task
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(Task $task, Request $request)
     {
@@ -76,7 +78,7 @@ class TaskController extends Controller
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      * @param Task $task
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function toggleTaskAction(Task $task)
     {
@@ -93,7 +95,7 @@ class TaskController extends Controller
      * @Security("user == task.getUser()",
      *     message = "Ce n'est pas votre task, vous ne pouvez pas le supprimer")
      * @param Task $task
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteTaskAction(Task $task)
     {

@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * @Route("/users", name="user_list")
@@ -26,7 +28,7 @@ class UserController extends Controller
      * @Security("has_role('ROLE_ADMIN')",
      *     message = "Vous n'avez pas les droits pour accéder à cette page")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function createAction(Request $request)
     {
@@ -57,7 +59,7 @@ class UserController extends Controller
      *     message = "Vous n'avez pas les droits pour accéder à cette page")
      * @param User $user
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(User $user, Request $request)
     {
