@@ -49,6 +49,10 @@ RUN a2enmod headers
 ## Enable ssl
 RUN a2enmod ssl
 
+RUN pecl install xdebug-2.7.0
+RUN docker-php-ext-enable xdebug
+RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/php.ini
+
 COPY vhost.conf /etc/apache2/sites-enabled/000-default.conf
 RUN service apache2 restart
 COPY . /var/www/html

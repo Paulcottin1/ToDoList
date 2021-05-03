@@ -21,5 +21,42 @@ class TaskControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
 
         $this->assertSame(1, $crawler->filter('.alert-success')->count());
+
+        return $client;
+    }
+
+    public function testEditTask()
+    {
+        $client = $this->testCreateTask();
+        $crawler = $client->request('GET', '/tasks/1/edit');
+        $form = $crawler->selectButton('Modifier')->form();
+        $form['task[title]'] = 'title edit';
+        $form['task[content]'] = 'content edit';
+        $client->submit($form);
+        $crawler = $client->followRedirect();
+
+        $this->assertSame(1, $crawler->filter('.alert-success')->count());
+
+        return $client;
+    }
+
+    public function testToggleTask()
+    {
+        $client = $this->testCreateTask();
+        $client->request('GET', '/tasks/1/toggle');
+        $crawler = $client->followRedirect();
+        $this->assertSame(1, $crawler->filter('.alert-success')->count());
+
+        return $client;
+    }
+
+    public function testDeleteTask()
+    {
+        $client = $this->testCreateTask();
+        $client->request('GET', '/tasks/1/delete');
+        $crawler = $client->followRedirect();
+        $this->assertSame(1, $crawler->filter('.alert-success')->count());
+
+        return $client;
     }
 }
