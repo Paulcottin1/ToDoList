@@ -10,12 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
     /**
      * @Route("/users", name="user_list")
-     * @Security("has_role('ROLE_ADMIN')",
+     * @Security("is_granted('ROLE_ADMIN')",
      *     message = "Vous n'avez pas les droits pour accéder à cette page")
      */
     public function listAction()
@@ -25,12 +26,13 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/create", name="user_create")
-     * @Security("has_role('ROLE_ADMIN')",
+     * @Security("is_granted('ROLE_ADMIN')",
      *     message = "Vous n'avez pas les droits pour accéder à cette page")
      * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -39,7 +41,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() &&$form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
+            $password = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 
             $em->persist($user);
@@ -55,20 +57,21 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
-     * @Security("has_role('ROLE_ADMIN')",
+     * @Security("is_granted('ROLE_ADMIN')",
      *     message = "Vous n'avez pas les droits pour accéder à cette page")
      * @param User $user
      * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
      */
-    public function editAction(User $user, Request $request)
+    public function editAction(User $user, Request $request, UserPasswordEncoderInterface $encoder)
     {
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
+            $password = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
