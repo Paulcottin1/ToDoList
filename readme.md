@@ -1,4 +1,5 @@
-# API-BILEMO
+# ToDo & Co
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/190dd43033344fc6a3492d40a7ff4825)](https://www.codacy.com/gh/Paulcottin1/ToDoList/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Paulcottin1/ToDoList&amp;utm_campaign=Badge_Grade)
 ## Prerequisites (Development environement)
     - Linux
     - Php 7.3
